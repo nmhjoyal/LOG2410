@@ -24,15 +24,17 @@ Objet3DComposite::~Objet3DComposite(){
 
 Objet3DComposite * Objet3DComposite::clone() const
 {
-	return nullptr;
+	const Objet3DContainer newCont(this->m_objetContainer);
+	Objet3DComposite *newObj = new Objet3DComposite();
+	newObj->m_objetContainer = newCont;
+	return newObj;
 }
 
 void Objet3DComposite::addChild(const Objet3DAbs& obj3d)
 {
 	// A Completer...
-	std::unique_ptr<Objet3DAbs> newPtr  = std::unique_ptr<Objet3DAbs>(obj3d.clone());
-
-	this->m_objetContainer.push_back(newPtr);
+	Objet3DPtr newPtr(obj3d.clone());
+	this->m_objetContainer.push_back(std::move(newPtr));
 }
 
 Objet3DIterator Objet3DComposite::begin(){
@@ -78,7 +80,15 @@ PrimitiveParams Objet3DComposite::getParameters() const {
 void Objet3DComposite::removeChild(Objet3DIterator_const obj3dIt)
 {
 	// A Completer...
-	this->m_objetContainer.erase(obj3dIt);
+	int pos = 0;
+	while (this->m_objetContainer.at(pos) != nullptr) {
+		if (&this->m_objetContainer.at(pos) == obj3dIt._Ptr) {
+			this->m_objetContainer.erase(this->m_objetContainer.begin() + pos);
+			break;
+		}
+		pos++;
+	}
+	
 }
 
 void Objet3DComposite::moveCenter(const Point3D & delta)
@@ -107,25 +117,20 @@ Point3D Objet3DComposite::computeCenter() const
 	if (sizeof(this->m_objetContainer) == 0)
 		return Point3D(0, 0, 0);
 
-	auto it = this->m_objetContainer.begin;
-	Point3D pt = it.getCenter();
-	float sommeX = 0.0;
-	float sommeY = 0.0;
-	float sommeZ = 0.0;
-	int nbObjets = 1;
-	sommeX += pt.x;
-	sommeY += pt.y;
-	sommeZ += pt.z;
+	Objet3DIterator_const it = this->cbegin();
+	Point3D pt = it->getCenter();
+	Point3D ptSomme = Point3D(0, 0, 0);
+	ptSomme += pt;
+	float nbObjets = 1;
 
-	while(it.next() != nullptr) {
-		pt = it.getCenter();
-		sommeX += pt.x;
-		sommeY += pt.y;
-		sommeZ += pt.z;
+	while(&it++ != nullptr) {
+		pt = it->getCenter();
+		ptSomme += pt;
 		nbObjets++;
 	}
 
-	return Point3D(sommeX / nbObjets, sommeY / nbObjets, sommeZ / nbObjets);
+	ptSomme /= nbObjets;
+	return ptSomme;
 }
 
 // Variable statique permettant de stocker le niveau d'indentation
