@@ -30,7 +30,6 @@ Objet3DIterator TransformedObjet3D::begin()
 {
 	// A Completer...
 	Objet3DContainer cont;
-	cont.push_back(this->m_objet3d);
 	return Objet3DIterator(cont.begin());
 }
 
@@ -39,7 +38,6 @@ Objet3DIterator_const TransformedObjet3D::cbegin() const {
 
 	// A Completer...
 	Objet3DContainer cont;
-	cont.push_back(this->m_objet3d);
 	return Objet3DIterator_const(cont.cbegin());
 }
 
@@ -48,7 +46,6 @@ Objet3DIterator_const TransformedObjet3D::cend() const {
 
 	// A Completer...
 	Objet3DContainer cont;
-	cont.push_back(this->m_objet3d);
 	return Objet3DIterator_const(cont.cend());
 }
 
@@ -56,7 +53,7 @@ Objet3DIterator_const TransformedObjet3D::cend() const {
 Objet3DAbs* TransformedObjet3D::clone() const 
 {
 	// A Completer...
-	TransformedObjet3D *newObj = new TransformedObjet3D(*this);
+	Objet3DAbs *newObj = new TransformedObjet3D(*this);
 	return newObj;
 }
 
@@ -65,7 +62,6 @@ Objet3DIterator TransformedObjet3D::end()
 {
 	// A Completer...
 	Objet3DContainer cont;
-	cont.push_back(this->m_objet3d);
 	return Objet3DIterator(cont.end());
 }
 
@@ -73,31 +69,33 @@ Objet3DIterator TransformedObjet3D::end()
 Point3D TransformedObjet3D::getCenter() const 
 {
 	// A Completer...
-	auto it = this->cbegin();
-	return it->getCenter();
+	return this->m_objet3d->getCenter() + this->m_translation;
 }
 
 
 size_t TransformedObjet3D::getNbParameters() const 
 {
 	// A Completer...
-	auto it = this->cbegin();
-	return it->getNbParameters();
+	return this->m_objet3d->getNbParameters();
 }
 
 
 PrimitiveParams TransformedObjet3D::getParameters() const 
 {
 	// A Completer...
-	auto it = this->cbegin();
-	return it->getParameters();
+	Point3D pt = this->m_objet3d->getCenter();
+	pt *= this->m_scale;
+	std::vector<float> vecParam = this->m_objet3d->getParameters();
+	for (int i = 0; i < vecParam.size(); i++) {
+		vecParam[i] *= this->m_scale;
+	}
+	return vecParam;
 }
 
 
 void TransformedObjet3D::moveCenter(const Point3D& delta){
 	// A Completer...
-	auto it = this->begin();
-	it->moveCenter(delta);
+	this->m_objet3d->moveCenter(delta);
 }
 
 
@@ -110,16 +108,14 @@ void TransformedObjet3D::removeChild(Objet3DIterator_const obj3dIt)
 
 void TransformedObjet3D::setCenter(const Point3D& center){
 	// A Completer...
-	auto it = this->begin();
-	it->setCenter(center);
+	this->m_objet3d->setCenter(center);
 }
 
 
 void TransformedObjet3D::setParameter(size_t pIndex, float pValue)
 {
 	// A Completer...
-	auto it = this->begin();
-	it->setParameter(pIndex, pValue);
+	return this->m_objet3d->setParameter(pIndex, pValue);
 }
 
 float TransformedObjet3D::getScale() const

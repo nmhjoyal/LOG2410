@@ -22,7 +22,6 @@ TP4_Test::TP4_Test()
 	Cylinder cyl2(Point3D(2., 1., 2.), 1., 2.);
 	Sphere   sph1(Point3D(2., 2., 2.), 2.);
 	Sphere   sph2(Point3D(3., -1., 1.), 3.5);
-
 	Objet3DComposite compos1;
 	compos1.addChild(cub1);
 	compos1.addChild(cyl1);
