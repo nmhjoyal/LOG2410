@@ -29,61 +29,75 @@ void TransformedObjet3D::addChild(const Objet3DAbs& obj3d){
 Objet3DIterator TransformedObjet3D::begin()
 {
 	// A Completer...
-	return Objet3DBaseIterator();
+	Objet3DContainer cont;
+	cont.push_back(this->m_objet3d);
+	return Objet3DIterator(cont.begin());
 }
 
 
 Objet3DIterator_const TransformedObjet3D::cbegin() const {
 
 	// A Completer...
-	return Objet3DBaseIterator();
+	Objet3DContainer cont;
+	cont.push_back(this->m_objet3d);
+	return Objet3DIterator_const(cont.cbegin());
 }
 
 
 Objet3DIterator_const TransformedObjet3D::cend() const {
 
 	// A Completer...
-	return Objet3DBaseIterator();
+	Objet3DContainer cont;
+	cont.push_back(this->m_objet3d);
+	return Objet3DIterator_const(cont.cend());
 }
 
 
 Objet3DAbs* TransformedObjet3D::clone() const 
 {
 	// A Completer...
-	return nullptr;
+	TransformedObjet3D *newObj = new TransformedObjet3D(*this);
+	return newObj;
 }
 
 
 Objet3DIterator TransformedObjet3D::end()
 {
 	// A Completer...
-	return Objet3DBaseIterator();
+	Objet3DContainer cont;
+	cont.push_back(this->m_objet3d);
+	return Objet3DIterator(cont.end());
 }
 
 
 Point3D TransformedObjet3D::getCenter() const 
 {
 	// A Completer...
-	return Point3D();
+	auto it = this->cbegin();
+	return it->getCenter();
 }
 
 
 size_t TransformedObjet3D::getNbParameters() const 
 {
 	// A Completer...
-	return 0;
+	auto it = this->cbegin();
+	return it->getNbParameters();
 }
 
 
 PrimitiveParams TransformedObjet3D::getParameters() const 
 {
 	// A Completer...
-	return PrimitiveParams();
+	auto it = this->cbegin();
+	return it->getParameters();
 }
 
 
 void TransformedObjet3D::moveCenter(const Point3D& delta){
 	// A Completer...
+	auto it = this->begin();
+	it->moveCenter(delta);
 }
 
 
@@ -96,34 +110,40 @@ void TransformedObjet3D::removeChild(Objet3DIterator_const obj3dIt)
 
 void TransformedObjet3D::setCenter(const Point3D& center){
 	// A Completer...
+	auto it = this->begin();
+	it->setCenter(center);
 }
 
 
 void TransformedObjet3D::setParameter(size_t pIndex, float pValue)
 {
 	// A Completer...
+	auto it = this->begin();
+	it->setParameter(pIndex, pValue);
 }
 
 float TransformedObjet3D::getScale() const
 {
 	// A Completer...
-	return 0.;
+	return this->m_scale;
 }
 
 void TransformedObjet3D::setScale(float scal)
 {
 	// A Completer...
+	this->m_scale = scal;
 }
 
 Point3D TransformedObjet3D::getTranslation() const
 {
 	// A Completer...
-	return Point3D();
+	return this->m_translation;
 }
 
 void TransformedObjet3D::setTranslation(const Point3D & translat)
 {
 	// A Completer...
+	this->m_translation = translat;
 }
 
 
