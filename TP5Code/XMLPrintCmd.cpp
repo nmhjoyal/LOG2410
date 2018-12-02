@@ -28,4 +28,6 @@ void XMLPrintCmd::execute()
 	// A COMPLETER
 	//		- Construire un visiteur d'ecriture en XML
 	//		- Appliquer le visiteur sur l'objet
+	VisitorXMLWriter xmlSelector = VisitorXMLWriter(std::cout);
+	this->m_obj3d.accept(xmlSelector);
 }
